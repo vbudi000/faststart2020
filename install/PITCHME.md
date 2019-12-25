@@ -12,11 +12,9 @@
 
 - Environment preparation
 	- Collecting software
-	- Preparing DNS entries
-	- Creating DHCP 
+	- Preparing DNS and DHCP
 	- Web server preparation
 	- Load balancer setup
-	- Persistent storage preparation
 - Running the installer
 	- Creating manifests
 	- Generating ignition file
@@ -35,6 +33,81 @@
 	- Ignition can be used to create files, identity, and services
 - Optimized to run in cloud and using containers
 
+---
+## Ignition file
+
+- JSON formatted file used for initial boot of CoreOS
+- Can be directly attached to the machine (boot parameter, URL, FTP)
+- Used to initialize the otherwise minimal generic Linux machine to perform a function
+	- Create users and groups
+	- Formatting the disks
+	- Create files
+	- Define and start services
+---
+## Ignition file format
+
+See `https://coreos.com/ignition/docs/latest/configuration-v2_3.html`
+
+- ignition: version, config: refers to other ignition file
+- storage: disks, filesystems, files, directories, links 
+- systemd: units
+- networkd: units
+- passwd: users, groups
+
+---
+## Examples
+
+Start service
+```
+{
+  "ignition": { "version": "2.2.0" },
+  "systemd": {
+    "units": [{
+      "name": "example.service",
+      "enabled": true,
+      "contents": "[Service]\nType=oneshot\nExecStart=/usr/bin/echo Hello World\n\n[Install]\nWantedBy=multi-user.target"
+    }]
+  }
+}
+```
+
+Set hostname
+```
+{
+  "ignition": { "version": "2.2.0" },
+  "storage": {
+    "files": [{
+      "filesystem": "root",
+      "path": "/etc/hostname",
+      "mode": 420,
+      "contents": { "source": "data:,core1" }
+    }]
+  }
+}
+```
+
+Add user
+```
+{
+  "ignition": { "version": "2.2.0" },
+  "passwd": {
+    "users": [
+      {
+        "name": "systemUser",
+        "passwordHash": "$superSecretPasswordHash.",
+        "sshAuthorizedKeys": [
+          "ssh-rsa veryLongRSAPublicKey"
+        ]
+      },
+      {
+        "name": "jenkins",
+        "uid": 1000
+      }
+    ]
+  }
+}
+```
+---
 
 - Provide a Cloud Foundry application developer to quickly able to migrate and deploy on to a Kubernetes environment, be it an OpenShift or IBM Cloud Private environment
 - Minimize learning curve needed to deploy and develop application on a new platform
