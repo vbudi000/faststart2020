@@ -10,7 +10,30 @@
 ---
 ## Installation overview
 
+- Environment preparation
+	- Collecting software
+	- Preparing DNS entries
+	- Creating DHCP 
+	- Web server preparation
+	- Load balancer setup
+	- Persistent storage preparation
+- Running the installer
+	- Creating manifests
+	- Generating ignition file
+- Booting the CoreOS instances
+	- Waiting for bootstrap
+	- Waiting for cluster
+
 ---
+## CoreOS
+
+- Light-weight Linux-based operating system
+	- Only contains the must have components
+	- Run automatically with DHCP IP address
+- Extendable using boot using ignition file
+	- Ignition file can be chained
+	- Ignition can be used to create files, identity, and services
+- Optimized to run in cloud and using containers
 
 
 - Provide a Cloud Foundry application developer to quickly able to migrate and deploy on to a Kubernetes environment, be it an OpenShift or IBM Cloud Private environment
